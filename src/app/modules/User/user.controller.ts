@@ -11,7 +11,7 @@ const createAdmin = async (req: Request, res: Response) => {
       message: "Admin created successfully",
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
       message: err?.name || "Something went wrong",
