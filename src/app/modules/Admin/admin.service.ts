@@ -1,7 +1,7 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { adminSearchableFields } from "./admin.constant";
 import { calculatePagination } from "../../../helpers/paginationHelper";
-const prisma = new PrismaClient();
+import prisma from "../../../shared/prisma";
 
 const getAllFromDB = async (params: any, options: any) => {
   const { limit, skip } = calculatePagination(options);
@@ -41,7 +41,9 @@ const getAllFromDB = async (params: any, options: any) => {
         ? {
             [options.sortBy]: options.sortOrder,
           }
-        : {},
+        : {
+            createdAt: "desc",
+          },
   });
 
   return result;
