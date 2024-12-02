@@ -7,6 +7,29 @@ import { StatusCodes } from "http-status-codes";
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUser(req.body);
 
+  const { refreshToken } = result;
+
+  res.cookie("refreshToken", refreshToken, {
+    secure: false,
+    httpOnly: true,
+  });
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "User logged in successfully",
+    data: {
+      accessToken: result.accessToken,
+      needPasswordChange: result.needPasswordChange,
+    },
+  });
+});
+
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+
+  const result = await AuthServices.refreshToken(refreshToken);
+
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -17,4 +40,5 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
 export const AuthController = {
   loginUser,
+  refreshToken,
 };
