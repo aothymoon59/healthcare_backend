@@ -14,16 +14,32 @@ const loginUser = async (payload: { email: string; password: string }) => {
     userData.password
   );
 
+  if (!isCorrectPassword) {
+    throw new Error("Password is incorrect");
+  }
+
   const accessToken = jwt.sign(
     {
       email: userData.email,
       role: userData.role,
     },
     "sdjghsfjghfdghgdf",
-    { algorithm: "HS256", expiresIn: "30m" }
+    { algorithm: "HS256", expiresIn: "5m" }
+  );
+  const refreshToken = jwt.sign(
+    {
+      email: userData.email,
+      role: userData.role,
+    },
+    "gjhikgjhgikgjhkgrj",
+    { algorithm: "HS256", expiresIn: "30d" }
   );
 
-  return userData;
+  return {
+    accessToken,
+    refreshToken,
+    needPasswordChange: userData.needPasswordChange,
+  };
 };
 
 export const AuthServices = {
