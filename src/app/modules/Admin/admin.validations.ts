@@ -7,4 +7,4 @@ const update = z.object({
   }),
 });
 
-export const adminValidationSchemas = { update };
+export const AdminValidationSchemas = { update };

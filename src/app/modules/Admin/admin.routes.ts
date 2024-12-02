@@ -1,8 +1,7 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import { AdminController } from "./admin.controller";
-import { AnyZodObject, z } from "zod";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { adminValidationSchemas } from "./admin.validations";
+import { AdminValidationSchemas } from "./admin.validations";
 
 const router = express.Router();
 
@@ -10,7 +9,7 @@ router.get("/", AdminController.getAllFromDB);
 router.get("/:id", AdminController.getByIdFromDB);
 router.patch(
   "/:id",
-  validateRequest(adminValidationSchemas.update),
+  validateRequest(AdminValidationSchemas.update),
   AdminController.updateIntoDB
 );
 router.delete("/:id", AdminController.deleteFromDB);
