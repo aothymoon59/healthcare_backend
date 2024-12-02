@@ -20,6 +20,10 @@ const getAllFromDB = async (params: any, options: any) => {
     });
   }
 
+  andConditions.push({
+    isDeleted: false,
+  });
+
   if (Object.keys(filteredData).length > 0) {
     andConditions.push({
       AND: Object.keys(filteredData).map((key) => ({
@@ -122,6 +126,7 @@ const softDeleteFromDB = async (id: string): Promise<Admin | null> => {
   await prisma.admin.findUniqueOrThrow({
     where: {
       id,
+      isDeleted: false,
     },
   });
 
