@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { UserStatus } from "@prisma/client";
 import config from "../../../config";
 import { Secret } from "jsonwebtoken";
+import emailSender from "./emailSender";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -81,7 +82,80 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const changePassword = async (user: any, payload: any) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  const isCorrectPassword: boolean = await bcrypt.compare(
+    payload.oldPassword,
+    userData.password
+  );
+
+  if (!isCorrectPassword) {
+    throw new Error("Password is incorrect");
+  }
+
+  const hashedPassword: string = await bcrypt.hash(payload.newPassword, 12);
+
+  await prisma.user.update({
+    where: {
+      email: user.email,
+    },
+    data: {
+      password: hashedPassword,
+      needPasswordChange: false,
+    },
+  });
+
+  return {
+    message: "Password changed successfully",
+  };
+};
+
+const forgotPassword = async (payload: { email: string }) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: payload.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  const resetPasswordToken = jwtHelpers.generateToken(
+    {
+      email: userData.email,
+      role: userData.role,
+    },
+    config.jwt.reset_password_secret as Secret,
+    config.jwt.reset_password_expires_in as string
+  );
+
+  const resetPassLink = `http://localhost:3000/reset-password?userId=${userData.id}&token=${resetPasswordToken}`;
+  await emailSender(
+    userData.email,
+    `
+    <div>
+        <p>Dear User,</p>
+        <p>Your password reset link: 
+          <a href="${resetPassLink}">
+            <button>
+              Reset Password
+            </button>
+          </a>
+        </p>
+    </div>
+    `
+  );
+
+  console.log(resetPassLink);
+};
+
 export const AuthServices = {
   loginUser,
   refreshToken,
+  changePassword,
+  forgotPassword,
 };
