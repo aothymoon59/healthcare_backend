@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { UserStatus } from "@prisma/client";
 import config from "../../../config";
 import { Secret } from "jsonwebtoken";
+import emailSender from "./emailSender";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -133,6 +134,21 @@ const forgotPassword = async (payload: { email: string }) => {
   );
 
   const resetPassLink = `http://localhost:3000/reset-password?userId=${userData.id}&token=${resetPasswordToken}`;
+  await emailSender(
+    userData.email,
+    `
+    <div>
+        <p>Dear User,</p>
+        <p>Your password reset link: 
+          <a href="${resetPassLink}">
+            <button>
+              Reset Password
+            </button>
+          </a>
+        </p>
+    </div>
+    `
+  );
 
   console.log(resetPassLink);
 };
