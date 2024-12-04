@@ -132,7 +132,9 @@ const forgotPassword = async (payload: { email: string }) => {
     config.jwt.reset_password_expires_in as string
   );
 
-  console.log(resetPasswordToken);
+  const resetPassLink = `http://localhost:3000/reset-password?userId=${userData.id}&token=${resetPasswordToken}`;
+
+  console.log(resetPassLink);
 };
 
 export const AuthServices = {

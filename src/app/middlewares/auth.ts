@@ -22,7 +22,6 @@ export const auth = (...roles: string[]) => {
         token,
         config.jwt.jwt_secret as Secret
       );
-      console.log(verifiedUser);
 
       req.user = verifiedUser;
 
