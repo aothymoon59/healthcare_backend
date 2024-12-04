@@ -10,7 +10,7 @@ router.post("/refresh-token", AuthController.refreshToken);
 router.post(
   "/change-password",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
-  AuthController.refreshToken
+  AuthController.changePassword
 );
 
 export const AuthRoutes = router;
