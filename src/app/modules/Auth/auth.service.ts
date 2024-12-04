@@ -100,7 +100,7 @@ const changePassword = async (user: any, payload: any) => {
 
   const hashedPassword: string = await bcrypt.hash(payload.newPassword, 12);
 
-  const result = await prisma.user.update({
+  await prisma.user.update({
     where: {
       email: user.email,
     },
@@ -115,8 +115,29 @@ const changePassword = async (user: any, payload: any) => {
   };
 };
 
+const forgotPassword = async (payload: { email: string }) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: payload.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  const resetPasswordToken = jwtHelpers.generateToken(
+    {
+      email: userData.email,
+      role: userData.role,
+    },
+    config.jwt.reset_password_secret as Secret,
+    config.jwt.reset_password_expires_in as string
+  );
+
+  console.log(resetPasswordToken);
+};
+
 export const AuthServices = {
   loginUser,
   refreshToken,
   changePassword,
+  forgotPassword,
 };
