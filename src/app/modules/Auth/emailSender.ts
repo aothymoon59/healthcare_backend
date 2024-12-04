@@ -10,6 +10,9 @@ const emailSender = async (email: string, html: string) => {
       user: config.emailSender.email,
       pass: config.emailSender.app_pass,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
 
   const info = await transporter.sendMail({
