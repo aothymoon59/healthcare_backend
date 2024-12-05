@@ -3,7 +3,7 @@ import { UserService } from "./user.service";
 import { catchAsync } from "../../../shared/catchAsync";
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserService.createAdmin(req.body);
+  const result = await UserService.createAdmin(req);
 
   res.status(200).json({
     success: true,
