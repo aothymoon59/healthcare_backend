@@ -1,10 +1,11 @@
-import { UserRole } from "@prisma/client";
+import { Admin, Doctor, Patient, UserRole } from "@prisma/client";
 import bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 import { fileUploader } from "../../../helpers/fileUploader";
 import { IFile } from "../../interfaces/file";
+import { Request } from "express";
 
-const createAdmin = async (req: any) => {
+const createAdmin = async (req: Request): Promise<Admin> => {
   const file = req.file as IFile;
 
   if (file) {
@@ -34,7 +35,7 @@ const createAdmin = async (req: any) => {
 
   return result;
 };
-const createDoctor = async (req: any) => {
+const createDoctor = async (req: Request): Promise<Doctor> => {
   const file = req.file as IFile;
 
   if (file) {
@@ -64,7 +65,7 @@ const createDoctor = async (req: any) => {
 
   return result;
 };
-const createPatient = async (req: any) => {
+const createPatient = async (req: Request): Promise<Patient> => {
   const file = req.file as IFile;
 
   if (file) {
