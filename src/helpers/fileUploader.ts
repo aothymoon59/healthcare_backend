@@ -2,6 +2,7 @@ import multer from "multer";
 import path from "path";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import { ICloudinaryResponse, IFile } from "../app/interfaces/file";
 
 cloudinary.config({
   cloud_name: "dct2egklz",
@@ -20,16 +21,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const uploadToCloudinary = async (file: any) => {
+const uploadToCloudinary = async (
+  file: IFile
+): Promise<ICloudinaryResponse | undefined> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       file.path,
-      {
-        public_id: file.originalname.split(".")[0] + "_" + Date.now(),
-        // TODO: if needed to reduce file size
-        transformation: [{ crop: "limit" }],
-      },
-      (error, result) => {
+      //   {
+      //     public_id: file.originalname.split(".")[0] + "_" + Date.now(),
+      //     // TODO: if needed to reduce file size
+      //     transformation: [{ crop: "limit" }],
+      //   },
+      (error: Error, result: ICloudinaryResponse) => {
         fs.unlinkSync(file.path);
         if (error) {
           reject(error);
