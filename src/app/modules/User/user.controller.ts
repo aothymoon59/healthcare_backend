@@ -34,15 +34,17 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllFromDB: RequestHandler = catchAsync(async (req, res) => {
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  // console.log(req.query)
   const filters = pick(req.query, userFilterableFields);
   const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+
   const result = await UserService.getAllFromDB(filters, options);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: "Users data fetched successfully",
+    message: "Users data fetched!",
     meta: result.meta,
     data: result.data,
   });

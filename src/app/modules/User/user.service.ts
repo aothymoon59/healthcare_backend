@@ -1,4 +1,3 @@
-import { User } from "./../../../../node_modules/.prisma/client/index.d";
 import { Admin, Doctor, Patient, Prisma, UserRole } from "@prisma/client";
 import bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
@@ -7,7 +6,7 @@ import { IFile } from "../../interfaces/file";
 import { Request } from "express";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { paginationHelper } from "../../../helpers/paginationHelper";
-import { userFilterableFields } from "./user.constant";
+import { userSearchableFields } from "./user.constant";
 
 const createAdmin = async (req: Request): Promise<Admin> => {
   const file = req.file as IFile;
@@ -102,13 +101,14 @@ const createPatient = async (req: Request): Promise<Patient> => {
 
 const getAllFromDB = async (params: any, options: IPaginationOptions) => {
   const { page, limit, skip } = paginationHelper.calculatePagination(options);
-  const { searchTerm, ...filteredData } = params;
+  const { searchTerm, ...filterData } = params;
 
   const andConditions: Prisma.UserWhereInput[] = [];
 
+  //console.log(filterData);
   if (params.searchTerm) {
     andConditions.push({
-      OR: userFilterableFields.map((field) => ({
+      OR: userSearchableFields.map((field) => ({
         [field]: {
           contains: params.searchTerm,
           mode: "insensitive",
@@ -117,11 +117,11 @@ const getAllFromDB = async (params: any, options: IPaginationOptions) => {
     });
   }
 
-  if (Object.keys(filteredData).length > 0) {
+  if (Object.keys(filterData).length > 0) {
     andConditions.push({
-      AND: Object.keys(filteredData).map((key) => ({
+      AND: Object.keys(filterData).map((key) => ({
         [key]: {
-          equals: (filteredData as any)[key],
+          equals: (filterData as any)[key],
         },
       })),
     });
@@ -142,6 +142,18 @@ const getAllFromDB = async (params: any, options: IPaginationOptions) => {
         : {
             createdAt: "desc",
           },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      needPasswordChange: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      admin: true,
+      patient: true,
+      doctor: true,
+    },
   });
 
   const total = await prisma.user.count({
