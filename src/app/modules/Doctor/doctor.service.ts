@@ -1,9 +1,9 @@
 import { Doctor, Prisma, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
-import { IDoctorFilterRequest, IDoctorUpdate } from "./doctor.interface";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { doctorSearchableFields } from "./doctor.constants";
 import { paginationHelper } from "../../../helpers/paginationHelper";
+import { IDoctorFilterRequest, IDoctorUpdate } from "./doctor.interface";
 
 const getAllFromDB = async (
   filters: IDoctorFilterRequest,
