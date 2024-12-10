@@ -24,10 +24,10 @@ const create = z.object({
       required_error: "Gender is required",
     }),
     appointmentFee: z.number({
-      required_error: "Blood group is required",
+      required_error: "appointment Fee is required",
     }),
     qualification: z.string({
-      required_error: "Apointment Fee is required",
+      required_error: "Qualification Fee is required",
     }),
     currentWorkingPlace: z.string({
       required_error: "Current Working Place is required",
