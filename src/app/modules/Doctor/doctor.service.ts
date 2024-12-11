@@ -127,7 +127,7 @@ const updateIntoDB = async (id: string, payload: IDoctorUpdate) => {
       const deleteSpecialtiesIds = specialties.filter(
         (specialty) => specialty.isDeleted
       );
-      //console.log(deleteSpecialtiesIds)
+
       for (const specialty of deleteSpecialtiesIds) {
         await transactionClient.doctorSpecialties.deleteMany({
           where: {
