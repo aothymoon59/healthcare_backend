@@ -74,6 +74,7 @@ model Patient {
 
   user              User               @relation(references: [email], fields: [email])
   PatientHealthData PatientHealthData?
+  MedicalReport     MedicalReport[]
 
   @@map("patients")
 }
@@ -122,6 +123,18 @@ model PatientHealthData {
   updatedAt           DateTime      @updatedAt
 
   @@map("patient_health_datas")
+}
+
+model MedicalReport {
+  id         String   @id @default(uuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id])
+  reportName String
+  reportLink String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("madical_reports")
 }
 
 enum UserRole {
