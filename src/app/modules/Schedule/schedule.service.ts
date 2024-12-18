@@ -158,4 +158,13 @@ const getAllFromDB = async (
   };
 };
 
-export const ScheduleService = { insertIntoDB, getAllFromDB };
+const getByIdFromDB = async (id: string): Promise<Schedule | null> => {
+  const result = await prisma.schedule.findUnique({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+
+export const ScheduleService = { insertIntoDB, getAllFromDB, getByIdFromDB };
