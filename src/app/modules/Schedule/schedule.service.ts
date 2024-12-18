@@ -176,4 +176,9 @@ const deleteFromDB = async (id: string): Promise<Schedule> => {
   return result;
 };
 
-export const ScheduleService = { insertIntoDB, getAllFromDB, getByIdFromDB };
+export const ScheduleService = {
+  insertIntoDB,
+  getAllFromDB,
+  getByIdFromDB,
+  deleteFromDB,
+};
