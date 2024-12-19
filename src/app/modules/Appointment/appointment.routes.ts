@@ -8,6 +8,12 @@ import { AppointmentValidation } from "./appointment.validation";
 const router = express.Router();
 
 router.get(
+  "/",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  AppointmentController.getAllFromDB
+);
+
+router.get(
   "/my-appointment",
   auth(UserRole.PATIENT, UserRole.DOCTOR),
   AppointmentController.getMyAppointment
