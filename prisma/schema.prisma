@@ -175,7 +175,7 @@ model Appointment {
   doctorId        String
   doctor          Doctor            @relation(fields: [doctorId], references: [id])
   scheduledId     String            @unique
-  scheduled       Schedule          @relation(fields: [scheduledId], references: [id])
+  schedule        Schedule          @relation(fields: [scheduledId], references: [id])
   videoCallingId  String
   status          AppointmentStatus @default(SCHEDULED)
   paymentStatus   PaymentStatus     @default(UNPAID)
