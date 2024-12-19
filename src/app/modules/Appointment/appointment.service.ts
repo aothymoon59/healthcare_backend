@@ -54,7 +54,9 @@ const createAppointment = async (user: IAuthUser, payload: any) => {
 
     //PH_HealthCare-datetime
     const today = new Date();
-    const transactionId = `PH_HealthCare-${today.getFullYear()}-today-${today.getMonth()}-${today.getHours()}-${today.getMinutes()}`;
+    const transactionId = `tnx-ph_healthcare-${today.getFullYear()}${
+      today.getMonth() + 1
+    }${today.getDate()}-${uuidv4()}`;
 
     await tx.payment.create({
       data: {
