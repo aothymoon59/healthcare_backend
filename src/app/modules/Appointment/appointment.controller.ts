@@ -8,7 +8,6 @@ import { IAuthUser } from "../../interfaces/common";
 const createAppointment = catchAsync(
   async (req: Request & { user?: IAuthUser }, res: Response) => {
     const user = req.user;
-    console.log(user);
     const result = await AppointmentServices.createAppointment(
       user as IAuthUser,
       req.body
