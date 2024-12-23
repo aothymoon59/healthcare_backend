@@ -1,42 +1,57 @@
 import axios from "axios";
+import config from "../../../config";
+import prisma from "../../../shared/prisma";
 
-const initPayment = async () => {
+const initPayment = async (appointmentId: string) => {
+  const paymentData = await prisma.payment.findFirstOrThrow({
+    where: {
+      appointmentId,
+    },
+    include: {
+      appointment: {
+        include: {
+          patient: true,
+        },
+      },
+    },
+  });
+  // console.log(paymentData);
   const data = {
-    store_id: "seopa6763d1797baf6",
-    store_passwd: "seopa6763d1797baf6@ssl",
-    total_amount: 100,
+    store_id: config.ssl.storeId,
+    store_passwd: config.ssl.storePass,
+    total_amount: paymentData?.amount,
     currency: "BDT",
-    tran_id: "REF123", // use unique tran_id for each api call
-    success_url: "http://localhost:3030/success",
-    fail_url: "http://localhost:3030/fail",
-    cancel_url: "http://localhost:3030/cancel",
+    tran_id: paymentData?.transactionId, // use unique tran_id for each api call
+    success_url: config.ssl.successUrl,
+    fail_url: config.ssl.failUrl,
+    cancel_url: config.ssl.cancelUrl,
     ipn_url: "http://localhost:3030/ipn",
-    shipping_method: "Courier",
-    product_name: "Computer.",
+    shipping_method: "N/A",
+    product_name: "Appointment",
     product_category: "Electronic",
     product_profile: "general",
-    cus_name: "Customer Name",
-    cus_email: "customer@example.com",
-    cus_add1: "Dhaka",
-    cus_add2: "Dhaka",
-    cus_city: "Dhaka",
-    cus_state: "Dhaka",
-    cus_postcode: "1000",
+    cus_name: paymentData?.appointment?.patient?.name,
+    cus_email: paymentData?.appointment?.patient?.email,
+    cus_add1: paymentData?.appointment?.patient?.address,
+    cus_add2: "N/A",
+    cus_city: "N/A",
+    cus_state: "N/A",
+    cus_postcode: "N/A",
     cus_country: "Bangladesh",
-    cus_phone: "01711111111",
-    cus_fax: "01711111111",
-    ship_name: "Customer Name",
-    ship_add1: "Dhaka",
-    ship_add2: "Dhaka",
-    ship_city: "Dhaka",
-    ship_state: "Dhaka",
+    cus_phone: paymentData?.appointment?.patient?.contactNumber,
+    cus_fax: "N/A",
+    ship_name: "N/A",
+    ship_add1: "N/A",
+    ship_add2: "N/A",
+    ship_city: "N/A",
+    ship_state: "N/A",
     ship_postcode: 1000,
-    ship_country: "Bangladesh",
+    ship_country: "N/A",
   };
 
   const response = await axios({
     method: "post",
-    url: "https://sandbox.sslcommerz.com/gwprocess/v3/api.php",
+    url: config.ssl.sslPaymentApi,
     data,
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
