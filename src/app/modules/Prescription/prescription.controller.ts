@@ -5,6 +5,7 @@ import { sendResponse } from "../../../shared/sendResponse";
 import { catchAsync } from "../../../shared/catchAsync";
 import { StatusCodes } from "http-status-codes";
 import { pick } from "../../../shared/pick";
+import { prescriptionFilterableFields } from "./prescription.conmstants";
 
 const insertIntoDB = catchAsync(
   async (req: Request & { user?: IAuthUser }, res: Response) => {
@@ -40,7 +41,21 @@ const patientPrescription = catchAsync(
   }
 );
 
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, prescriptionFilterableFields);
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+  const result = await PrescriptionService.getAllFromDB(filters, options);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Prescriptions retrieval successfully",
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 export const PrescriptionController = {
   insertIntoDB,
   patientPrescription,
+  getAllFromDB,
 };
