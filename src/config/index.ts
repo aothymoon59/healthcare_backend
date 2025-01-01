@@ -28,4 +28,8 @@ export default {
     sslPaymentApi: process.env.SSL_PAYMENT_API,
     sslValidationApi: process.env.SSL_VALIDATION_API,
   },
+  super_admin: {
+    email: process.env.SUPER_ADMIN_EMAIL,
+    password: process.env.SUPER_ADMIN_PASS,
+  },
 };
