@@ -42,4 +42,4 @@ This repository contains the backend codebase responsible for handling server-si
 5. Run the Command: `npm run seed`
 6. Start the server: `npm run dev`
 
-### API Documentation: [POSTMAN API DOCUMENTATION (Click Here)](https://documenter.getpostman.com/view/26694209/2sA2xjyWRv)
+### API Documentation: [POSTMAN API DOCUMENTATION (Click Here)](https://documenter.getpostman.com/view/32647003/2sAYBXCXDn)
