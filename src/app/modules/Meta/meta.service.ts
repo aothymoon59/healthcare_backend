@@ -39,6 +39,9 @@ const getSuperAdminMetaData = async () => {
       status: PaymentStatus.PAID,
     },
   });
+
+  getBarChartData();
+
   return {
     appointmentCount,
     adminCount,
@@ -184,6 +187,19 @@ const getPatientMetaData = async (user: IAuthUser) => {
     reviewCount,
     formattedAppointStatusDistribution,
   };
+};
+
+const getBarChartData = async () => {
+  const appointmentCountByMonth: { month: Date; count: bigint }[] =
+    await prisma.$queryRaw`
+    SELECT DATE_TRUNC('month', "createdAt") AS month, 
+    COUNT(*) AS count
+    FROM "appointments" 
+    GROUP BY month 
+    ORDER BY month ASC
+    `;
+
+  console.log(appointmentCountByMonth);
 };
 
 export const MetaService = {
