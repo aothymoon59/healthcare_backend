@@ -130,8 +130,6 @@ const getAllFromDB = async (
     },
   });
 
-  console.log(doctorSchedules);
-
   const doctorScheduleIds = doctorSchedules.map(
     (schedule) => schedule.scheduleId
   );
