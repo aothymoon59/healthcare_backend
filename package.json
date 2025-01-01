@@ -6,7 +6,8 @@
   "author": "aothymoon59 <aothymoon59@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "seed": "ts-node-dev --respawn --transpile-only src/seed.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
