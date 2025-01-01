@@ -1,5 +1,6 @@
 import { UserRole } from "@prisma/client";
 import { IAuthUser } from "../../interfaces/common";
+import prisma from "../../../shared/prisma";
 
 const fetchDashboardMetaData = async (user: IAuthUser) => {
   switch (user?.role) {
@@ -10,7 +11,7 @@ const fetchDashboardMetaData = async (user: IAuthUser) => {
       getAdminMetaData();
       break;
     case UserRole.DOCTOR:
-      getDoctorMetaData();
+      getDoctorMetaData(user as IAuthUser);
       break;
     case UserRole.PATIENT:
       getPatientMetaData();
@@ -24,10 +25,42 @@ const getSuperAdminMetaData = async () => {
   console.log("super admin");
 };
 const getAdminMetaData = async () => {
-  console.log("admin");
+  const appointmentCount = await prisma.appointment.count();
+  const patientCount = await prisma.patient.count();
+  const doctorCount = await prisma.doctor.count();
+  const paymentCount = await prisma.payment.count();
+
+  const totalRevenue = await prisma.payment.aggregate({
+    _sum: {
+      amount: true,
+    },
+  });
+  console.log({
+    appointmentCount,
+    patientCount,
+    doctorCount,
+    paymentCount,
+    totalRevenue,
+  });
 };
-const getDoctorMetaData = async () => {
-  console.log("doctor");
+const getDoctorMetaData = async (user: IAuthUser) => {
+  const doctorData = await prisma.doctor.findUniqueOrThrow({
+    where: {
+      email: user?.email,
+    },
+  });
+
+  const appointmentCount = await prisma.appointment.count({
+    where: {
+      doctorId: doctorData.id,
+    },
+  });
+
+  const patientCount = await prisma.appointment.groupBy({
+    by: ["patientId"],
+  });
+  //   console.log(doctorData);
+  console.log({ appointmentCount, patientCount });
 };
 const getPatientMetaData = async () => {
   console.log("patient");
