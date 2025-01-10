@@ -23,7 +23,7 @@ cron.schedule("* * * * *", () => {
 
 app.get("/", (req: Request, res: Response) => {
   res.send({
-    message: "PH HealthCare Server...",
+    message: "PH HealthCare Server is running 🚀...",
   });
 });
 
