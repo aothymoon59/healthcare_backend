@@ -8,7 +8,12 @@ import cookieParser from "cookie-parser";
 import cron from "node-cron";
 
 const app: Application = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,7 +28,7 @@ cron.schedule("* * * * *", () => {
 
 app.get("/", (req: Request, res: Response) => {
   res.send({
-    message: "PH HealthCare Server...",
+    message: "PH HealthCare Server is running 🚀...",
   });
 });
 

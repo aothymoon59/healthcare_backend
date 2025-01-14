@@ -6,6 +6,11 @@ import { IPaginationOptions } from "../../interfaces/pagination";
 import { paginationHelper } from "../../../helpers/paginationHelper";
 import { IAuthUser } from "../../interfaces/common";
 
+const convertDateTime = async (date: Date) => {
+  const offset = date.getTimezoneOffset() * 60 * 1000;
+  return new Date(date.getTime() + offset);
+};
+
 const insertIntoDB = async (payload: ISchedule): Promise<Schedule[]> => {
   const { startDate, endDate, startTime, endTime } = payload;
 
@@ -38,9 +43,17 @@ const insertIntoDB = async (payload: ISchedule): Promise<Schedule[]> => {
     );
 
     while (startDateTime < endDateTime) {
+      // const scheduleData = {
+      //   startDateTime: startDateTime,
+      //   endDateTime: addMinutes(startDateTime, intervalTime),
+      // };
+
+      const s = await convertDateTime(startDateTime);
+      const e = await convertDateTime(addMinutes(startDateTime, intervalTime));
+
       const scheduleData = {
-        startDateTime: startDateTime,
-        endDateTime: addMinutes(startDateTime, intervalTime),
+        startDateTime: s,
+        endDateTime: e,
       };
 
       const existingSchedule = await prisma.schedule.findFirst({
@@ -117,8 +130,6 @@ const getAllFromDB = async (
     },
   });
 
-  console.log(doctorSchedules);
-
   const doctorScheduleIds = doctorSchedules.map(
     (schedule) => schedule.scheduleId
   );
@@ -164,6 +175,7 @@ const getByIdFromDB = async (id: string): Promise<Schedule | null> => {
       id,
     },
   });
+
   return result;
 };
 

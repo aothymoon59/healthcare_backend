@@ -18,6 +18,7 @@ router.get("/", SpecialtiesController.getAllFromDB);
 
 router.post(
   "/",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
   fileUploader.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = SpecialtiesValidation.create.parse(JSON.parse(req.body.data));

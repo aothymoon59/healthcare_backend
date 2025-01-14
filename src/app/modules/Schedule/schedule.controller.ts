@@ -33,7 +33,8 @@ const getAllFromDB = catchAsync(
       statusCode: StatusCodes.OK,
       success: true,
       message: "Schedule fetched successfully!",
-      data: result,
+      meta: result.meta,
+      data: result.data,
     });
   }
 );
