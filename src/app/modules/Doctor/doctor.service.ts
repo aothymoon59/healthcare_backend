@@ -141,15 +141,35 @@ const updateIntoDB = async (id: string, payload: IDoctorUpdate) => {
       const createSpecialtiesIds = specialties.filter(
         (specialty) => !specialty.isDeleted
       );
-      console.log(createSpecialtiesIds);
+
       for (const specialty of createSpecialtiesIds) {
-        await transactionClient.doctorSpecialties.create({
-          data: {
-            doctorId: doctorInfo.id,
-            specialtiesId: specialty.specialtiesId,
-          },
-        });
+        // Check if the record already exists
+        const existingSpecialty =
+          await transactionClient.doctorSpecialties.findFirst({
+            where: {
+              doctorId: doctorInfo.id,
+              specialtiesId: specialty.specialtiesId,
+            },
+          });
+
+        if (!existingSpecialty) {
+          await transactionClient.doctorSpecialties.create({
+            data: {
+              doctorId: doctorInfo.id,
+              specialtiesId: specialty.specialtiesId,
+            },
+          });
+        }
       }
+
+      // for (const specialty of createSpecialtiesIds) {
+      //   await transactionClient.doctorSpecialties.create({
+      //     data: {
+      //       doctorId: doctorInfo.id,
+      //       specialtiesId: specialty.specialtiesId,
+      //     },
+      //   });
+      // }
     }
   });
 
