@@ -145,7 +145,7 @@ const forgotPassword = async (payload: { email: string }) => {
     `
     <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333;">
     <div style="max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
-      <div style="background-color: #00796b; color: white; padding: 20px; text-align: center;">
+      <div style="background-color: #1586FD; color: white; padding: 20px; text-align: center;">
         <h1 style="margin: 0;">PH Health Care</h1>
         <p style="margin: 5px 0 0;">Your Trusted Health Companion</p>
       </div>
@@ -154,14 +154,14 @@ const forgotPassword = async (payload: { email: string }) => {
         <p style="margin: 0 0 16px;">We received a request to reset your password. Click the button below to proceed:</p>
         <p style="margin: 0 0 16px; text-align: center;">
           <a href="${resetPassLink}" style="text-decoration: none;">
-            <button style="background-color: #4caf50; color: white; padding: 12px 25px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Reset Password</button>
+            <button style="background-color:rgb(3, 54, 108); color: white; padding: 12px 25px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Reset Password</button>
           </a>
         </p>
         <p style="margin: 0 0 16px;">If you did not request a password reset, please ignore this email or contact our support team.</p>
       </div>
       <div style="background-color: #f1f1f1; color: #555; padding: 10px; text-align: center; font-size: 12px;">
         <p style="margin: 0;">&copy; 2024 PH Health Care. All rights reserved.</p>
-        <p style="margin: 5px 0 0;">If you have any questions, feel free to contact us at <a href="mailto:support@phhealthcare.com" style="color: #00796b; text-decoration: none;">support@phhealthcare.com</a></p>
+        <p style="margin: 5px 0 0;">If you have any questions, feel free to contact us at <a href="mailto:support@phhealthcare.com" style="color: #1586FD; text-decoration: none;">support@phhealthcare.com</a></p>
       </div>
     </div>
   </body>
