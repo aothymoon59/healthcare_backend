@@ -133,6 +133,7 @@ const forgotPassword = async (payload: { email: string }) => {
   const resetPasswordToken = jwtHelpers.generateToken(
     {
       email: userData.email,
+      userId: userData.id,
       role: userData.role,
     },
     config.jwt.reset_password_secret as Secret,
