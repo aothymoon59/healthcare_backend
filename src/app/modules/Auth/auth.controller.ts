@@ -45,7 +45,10 @@ const changePassword = catchAsync(
       statusCode: StatusCodes.OK,
       success: true,
       message: "Password changed successfully",
-      data: result,
+      data: {
+        status: StatusCodes.OK,
+        message: result.message,
+      },
     });
   }
 );
