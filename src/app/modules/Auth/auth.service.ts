@@ -155,7 +155,7 @@ const forgotPassword = async (payload: { email: string }) => {
         <p style="margin: 0 0 16px;">We received a request to reset your password. Click the button below to proceed:</p>
         <p style="margin: 0 0 16px; text-align: center;">
           <a href="${resetPassLink}" style="text-decoration: none;">
-            <button style="background-color:rgb(3, 54, 108); color: white; padding: 12px 25px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Reset Password</button>
+            <button style="background-color:##0c6ce9; color: white; padding: 12px 25px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Reset Password</button>
           </a>
         </p>
         <p style="margin: 0 0 16px;">If you did not request a password reset, please ignore this email or contact our support team.</p>
@@ -202,6 +202,7 @@ const resetPassword = async (
     },
     data: {
       password,
+      needPasswordChange: false,
     },
   });
 };
