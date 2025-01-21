@@ -150,7 +150,7 @@ const getAllFromDB = async (
   options: IPaginationOptions
 ) => {
   const { limit, page, skip } = paginationHelper.calculatePagination(options);
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm, startDate, endDate, ...filterData } = filters;
   const andConditions = [];
 
   if (searchTerm) {
@@ -161,6 +161,27 @@ const getAllFromDB = async (
           mode: "insensitive",
         },
       },
+    });
+  }
+
+  if (startDate && endDate) {
+    andConditions.push({
+      AND: [
+        {
+          schedule: {
+            startDateTime: {
+              gte: startDate,
+            },
+          },
+        },
+        {
+          schedule: {
+            endDateTime: {
+              lte: endDate,
+            },
+          },
+        },
+      ],
     });
   }
 
