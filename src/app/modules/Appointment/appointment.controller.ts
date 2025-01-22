@@ -38,7 +38,8 @@ const getMyAppointment = catchAsync(
       statusCode: StatusCodes.OK,
       success: true,
       message: "My Appointment retrieved successfully!",
-      data: result,
+      meta: result?.meta,
+      data: result?.data,
     });
   }
 );
