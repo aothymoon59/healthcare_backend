@@ -1,11 +1,11 @@
-# PH HealthCare Server
+# E-HealthPro BD
 
-Welcome to the backend repository for PH HealthCare, a tutorial project developed as part of the "Level 2 Web Development Course" offered by Programming Hero.
+Welcome to the backend repository for E-HealthPro BD, a tutorial project developed as part of the "Level 2 Web Development Course" offered by Programming Hero.
 
 This repository contains the backend codebase responsible for handling server-side logic, database management, and communication between different system components.
 
 <!-- ## Table of Contents
-- [PH HealthCare Backend](#ph-healthcare-backend)
+- [E-HealthPro BD Backend](#healthcare_server)
   - [Table of Contents](#table-of-contents)
   - [Technologies Used](#technologies-used)
   - [Features](#features)
