@@ -25,6 +25,6 @@ router.post(
   }
 );
 
-router.get("/company-info");
+router.get("/company-info", MetaController.getCompanyInfo);
 
 export const MetaRoutes = router;
