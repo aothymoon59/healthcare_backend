@@ -1,6 +1,38 @@
 import { PaymentStatus, UserRole } from "@prisma/client";
 import { IAuthUser } from "../../interfaces/common";
 import prisma from "../../../shared/prisma";
+import { Request } from "express";
+import { IFile } from "../../interfaces/file";
+import { fileUploader } from "../../../helpers/fileUploader";
+
+const createOrUpdateCompanyInfo = async (req: Request) => {
+  const file = req.file as IFile; // Primary logo
+
+  // Fetch the single company info record (if it exists)
+  const existingCompanyInfo = await prisma.companyInfo.findFirst();
+
+  // Process and upload the primary logo
+  if (file) {
+    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
+    req.body.companyLogo = uploadToCloudinary?.secure_url;
+  }
+
+  let result;
+  if (existingCompanyInfo) {
+    // Update the existing record
+    result = await prisma.companyInfo.update({
+      where: { id: existingCompanyInfo.id }, // Use the primary key for updating
+      data: req.body,
+    });
+  } else {
+    // Create a new record (since none exists)
+    result = await prisma.companyInfo.create({
+      data: req.body,
+    });
+  }
+
+  return result;
+};
 
 const fetchDashboardMetaData = async (user: IAuthUser) => {
   let metaData;
@@ -233,4 +265,5 @@ const getPieChartData = async () => {
 
 export const MetaService = {
   fetchDashboardMetaData,
+  createOrUpdateCompanyInfo,
 };

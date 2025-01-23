@@ -1,7 +1,8 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { MetaController } from "./meta.controller";
 import { auth } from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
+import { fileUploader } from "../../../helpers/fileUploader";
 
 const router = express.Router();
 
@@ -14,7 +15,11 @@ router.get(
 router.post(
   "/company-info",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
-  MetaController.createCompanyInfo
+  fileUploader.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    return MetaController.createOrUpdateCompanyInfo(req, res, next);
+  }
 );
 
 export const MetaRoutes = router;
