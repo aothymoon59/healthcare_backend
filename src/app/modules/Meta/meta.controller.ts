@@ -18,6 +18,30 @@ const fetchDashboardMetaData = catchAsync(
   }
 );
 
+const createOrUpdateCompanyInfo = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await MetaService.createOrUpdateCompanyInfo(req);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Company info added successfully",
+      data: result,
+    });
+  }
+);
+
+const getCompanyInfo = catchAsync(async (req: Request, res: Response) => {
+  const result = await MetaService.getCompanyInfo();
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Company info retrieval successfully",
+    data: result,
+  });
+});
+
 export const MetaController = {
   fetchDashboardMetaData,
+  createOrUpdateCompanyInfo,
+  getCompanyInfo,
 };
