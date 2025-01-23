@@ -11,4 +11,10 @@ router.get(
   MetaController.fetchDashboardMetaData
 );
 
+router.post(
+  "/company-info",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  MetaController.createCompanyInfo
+);
+
 export const MetaRoutes = router;
