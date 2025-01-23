@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const createOrUpdateCompanyInfo = z.object({
   companyName: z.string().min(1, "Company name is required"),
+  nameForHeader: z.string().min(1, "Name for header is required"),
   address: z.string().optional(),
   email: z.string().email("Invalid email format").optional(),
   phoneNumber: z.string().optional(),
