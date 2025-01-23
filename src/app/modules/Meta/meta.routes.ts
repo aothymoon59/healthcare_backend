@@ -3,6 +3,8 @@ import { MetaController } from "./meta.controller";
 import { auth } from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
 import { fileUploader } from "../../../helpers/fileUploader";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { MetaValidation } from "./meta.validation";
 
 const router = express.Router();
 
@@ -17,7 +19,9 @@ router.post(
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
   fileUploader.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
+    req.body = MetaValidation.createOrUpdateCompanyInfo.parse(
+      JSON.parse(req.body.data)
+    );
     return MetaController.createOrUpdateCompanyInfo(req, res, next);
   }
 );
