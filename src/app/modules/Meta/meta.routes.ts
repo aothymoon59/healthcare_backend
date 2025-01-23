@@ -3,7 +3,6 @@ import { MetaController } from "./meta.controller";
 import { auth } from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
 import { fileUploader } from "../../../helpers/fileUploader";
-import { validateRequest } from "../../middlewares/validateRequest";
 import { MetaValidation } from "./meta.validation";
 
 const router = express.Router();
@@ -25,5 +24,7 @@ router.post(
     return MetaController.createOrUpdateCompanyInfo(req, res, next);
   }
 );
+
+router.get("/company-info");
 
 export const MetaRoutes = router;

@@ -34,6 +34,11 @@ const createOrUpdateCompanyInfo = async (req: Request) => {
   return result;
 };
 
+const getCompanyInfo = async () => {
+  const result = await prisma.companyInfo.findFirst();
+  return result;
+};
+
 const fetchDashboardMetaData = async (user: IAuthUser) => {
   let metaData;
   switch (user?.role) {
@@ -266,4 +271,5 @@ const getPieChartData = async () => {
 export const MetaService = {
   fetchDashboardMetaData,
   createOrUpdateCompanyInfo,
+  getCompanyInfo,
 };
