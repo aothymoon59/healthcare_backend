@@ -44,4 +44,47 @@ const seedSuperAdmin = async () => {
   }
 };
 
-seedSuperAdmin();
+const seedCompanyInfo = async () => {
+  try {
+    const existingCompanyInfo = await prisma.companyInfo.findFirst();
+
+    if (existingCompanyInfo) {
+      console.log("Company information already exists.");
+      return;
+    }
+
+    // Default data for seeding
+    const defaultCompanyInfo = {
+      companyName: "E-HealthPro BD",
+      nameForHeader:
+        "<p>E-Health<span style='color: #1586FD;'>Pro</span> BD</p>",
+      companyLogo: "https://placehold.co/150x150",
+      address: "123 Default St, Default City, Country",
+      email: "info@defaultcompany.com",
+      phoneNumber: "123-456-7890",
+      telephone: "987-654-3210",
+      website: "https://defaultcompany.com",
+      facebookUrl: "https://facebook.com/defaultcompany",
+      instagramUrl: "https://instagram.com/defaultcompany",
+      twitterUrl: "https://twitter.com/defaultcompany",
+      linkedinUrl: "https://linkedin.com/company/defaultcompany",
+    };
+
+    const createdCompanyInfo = await prisma.companyInfo.create({
+      data: defaultCompanyInfo,
+    });
+
+    console.log("Company information seeded successfully:", createdCompanyInfo);
+  } catch (err) {
+    console.error("Error seeding company information:", err);
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+const seedDatabase = async () => {
+  await seedSuperAdmin();
+  await seedCompanyInfo();
+};
+
+seedDatabase();
