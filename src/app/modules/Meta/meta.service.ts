@@ -86,7 +86,7 @@ const getSuperAdminMetaData = async () => {
     patientCount,
     doctorCount,
     paymentCount,
-    totalRevenue,
+    totalRevenue: totalRevenue._sum.amount,
     barChartData,
     pieChartData,
   };
@@ -114,7 +114,7 @@ const getAdminMetaData = async () => {
     patientCount,
     doctorCount,
     paymentCount,
-    totalRevenue,
+    totalRevenue: totalRevenue._sum.amount,
     barChartData,
     pieChartData,
   };
@@ -179,7 +179,7 @@ const getDoctorMetaData = async (user: IAuthUser) => {
     appointmentCount,
     patientCount: patientCount.length,
     reviewCount,
-    totalRevenue,
+    totalRevenue: totalRevenue._sum.amount,
     formattedAppointStatusDistribution,
   };
 };
