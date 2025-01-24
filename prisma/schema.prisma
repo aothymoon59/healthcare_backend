@@ -241,21 +241,21 @@ model Review {
 }
 
 model CompanyInfo {
-  id           String   @id @default(uuid())
-  companyName  String
-  nameForHeader String
-  companyLogo  String
-  address      String?
-  email        String?
-  phoneNumber  String?
-  telephone    String?
-  website      String?
-  facebookUrl  String?
-  instagramUrl String?
-  twitterUrl   String?
-  linkedinUrl  String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id            String   @id @default(uuid())
+  companyName   String?
+  nameForHeader String?
+  companyLogo   String?
+  address       String?
+  email         String?
+  phoneNumber   String?
+  telephone     String?
+  website       String?
+  facebookUrl   String?
+  instagramUrl  String?
+  twitterUrl    String?
+  linkedinUrl   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@map("company_info")
 }
