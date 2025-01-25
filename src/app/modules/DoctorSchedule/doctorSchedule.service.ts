@@ -37,7 +37,6 @@ const getMySchedule = async (
 ) => {
   const { limit, page, skip } = paginationHelper.calculatePagination(options);
   const { startDate, endDate, ...filterData } = filters;
-  console.log(filterData);
 
   const andConditions = [];
 
@@ -96,7 +95,7 @@ const getMySchedule = async (
     orderBy:
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
-        : {},
+        : { schedule: { createdAt: "asc" } },
   });
   const total = await prisma.doctorSchedules.count({
     where: whereConditions,
@@ -219,7 +218,7 @@ const getAllFromDB = async (
     orderBy:
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
-        : {},
+        : { schedule: { createdAt: "asc" } },
   });
   const total = await prisma.doctorSchedules.count({
     where: whereConditions,

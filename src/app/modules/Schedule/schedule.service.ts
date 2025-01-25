@@ -147,7 +147,7 @@ const getAllFromDB = async (
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : {
-            createdAt: "desc",
+            createdAt: "asc",
           },
   });
   const total = await prisma.schedule.count({
