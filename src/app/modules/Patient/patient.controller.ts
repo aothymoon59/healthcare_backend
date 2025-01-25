@@ -16,8 +16,8 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     statusCode: StatusCodes.OK,
     success: true,
     message: "Patient retrieval successfully",
-    meta: result.meta,
-    data: result.data,
+    meta: result?.meta,
+    data: result?.data,
   });
 });
 
