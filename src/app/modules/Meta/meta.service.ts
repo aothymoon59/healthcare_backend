@@ -66,7 +66,11 @@ const getSuperAdminMetaData = async () => {
   const adminCount = await prisma.admin.count();
   const patientCount = await prisma.patient.count();
   const doctorCount = await prisma.doctor.count();
-  const paymentCount = await prisma.payment.count();
+  const paymentCount = await prisma.payment.findMany({
+    where: {
+      status: PaymentStatus.PAID,
+    },
+  });
 
   const totalRevenue = await prisma.payment.aggregate({
     _sum: {
@@ -85,7 +89,7 @@ const getSuperAdminMetaData = async () => {
     adminCount,
     patientCount,
     doctorCount,
-    paymentCount,
+    paymentCount: paymentCount.length,
     totalRevenue: totalRevenue._sum.amount,
     barChartData,
     pieChartData,
@@ -95,7 +99,11 @@ const getAdminMetaData = async () => {
   const appointmentCount = await prisma.appointment.count();
   const patientCount = await prisma.patient.count();
   const doctorCount = await prisma.doctor.count();
-  const paymentCount = await prisma.payment.count();
+  const paymentCount = await prisma.payment.findMany({
+    where: {
+      status: PaymentStatus.PAID,
+    },
+  });
 
   const totalRevenue = await prisma.payment.aggregate({
     _sum: {
@@ -113,7 +121,7 @@ const getAdminMetaData = async () => {
     appointmentCount,
     patientCount,
     doctorCount,
-    paymentCount,
+    paymentCount: paymentCount.length,
     totalRevenue: totalRevenue._sum.amount,
     barChartData,
     pieChartData,
