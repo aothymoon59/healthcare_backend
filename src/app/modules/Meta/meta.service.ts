@@ -180,7 +180,7 @@ const getDoctorMetaData = async (user: IAuthUser) => {
     patientCount: patientCount.length,
     reviewCount,
     totalRevenue: totalRevenue._sum.amount,
-    formattedAppointStatusDistribution,
+    appointStatusDistribution: formattedAppointStatusDistribution,
   };
 };
 const getPatientMetaData = async (user: IAuthUser) => {
@@ -231,7 +231,7 @@ const getPatientMetaData = async (user: IAuthUser) => {
     appointmentCount,
     prescriptionCount,
     reviewCount,
-    formattedAppointStatusDistribution,
+    appointStatusDistribution: formattedAppointStatusDistribution,
   };
 };
 
