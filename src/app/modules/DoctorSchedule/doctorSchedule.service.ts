@@ -40,6 +40,16 @@ const getMySchedule = async (
 
   const andConditions = [];
 
+  // Add condition for startDateTime greater than current date and time
+  const currentDate = new Date();
+  andConditions.push({
+    schedule: {
+      startDateTime: {
+        gte: currentDate,
+      },
+    },
+  });
+
   if (startDate && endDate) {
     andConditions.push({
       AND: [
@@ -151,6 +161,15 @@ const getAllFromDB = async (
   const { limit, page, skip } = paginationHelper.calculatePagination(options);
   const { searchTerm, startDate, endDate, ...filterData } = filters;
   const andConditions = [];
+
+  const currentDate = new Date();
+  andConditions.push({
+    schedule: {
+      startDateTime: {
+        gte: currentDate,
+      },
+    },
+  });
 
   if (searchTerm) {
     andConditions.push({

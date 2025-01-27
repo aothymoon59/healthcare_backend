@@ -90,6 +90,14 @@ const getAllFromDB = async (
 
   const andConditions = [];
 
+  // Add condition for startDateTime greater than current date and time
+  const currentDate = new Date();
+  andConditions.push({
+    startDateTime: {
+      gte: currentDate,
+    },
+  });
+
   if (startDate && endDate) {
     andConditions.push({
       AND: [
