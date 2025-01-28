@@ -125,8 +125,6 @@ const getMySchedule = async (
     where: whereConditions,
   });
 
-  console.log(andConditions, "===============================================");
-
   return {
     meta: {
       total,
