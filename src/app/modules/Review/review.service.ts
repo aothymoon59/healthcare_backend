@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../errors/ApiError";
 import { IAuthUser } from "../../interfaces/common";
-import { Prisma } from "@prisma/client";
+import { AppointmentStatus, PaymentStatus, Prisma } from "@prisma/client";
 import { paginationHelper } from "../../../helpers/paginationHelper";
 import { IPaginationOptions } from "../../interfaces/pagination";
 
@@ -13,9 +13,12 @@ const insertIntoDB = async (user: IAuthUser, payload: any) => {
     },
   });
 
+  // TODO: it can be modified
   const appointmentData = await prisma.appointment.findUniqueOrThrow({
     where: {
       id: payload.appointmentId,
+      paymentStatus: PaymentStatus.PAID,
+      status: AppointmentStatus.COMPLETED,
     },
   });
 
