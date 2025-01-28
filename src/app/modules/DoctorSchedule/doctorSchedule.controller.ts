@@ -22,7 +22,7 @@ const insertIntoDB = catchAsync(
 
 const getMySchedule = catchAsync(
   async (req: Request & { user?: IAuthUser }, res: Response) => {
-    const filters = pick(req.query, ["startDate", "endDate", "isBooked"]);
+    const filters = pick(req.query, scheduleFilterableFields);
     const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
 
     const user = req.user;
@@ -36,7 +36,8 @@ const getMySchedule = catchAsync(
       statusCode: StatusCodes.OK,
       success: true,
       message: "My Schedule fetched successfully!",
-      data: result,
+      meta: result?.meta,
+      data: result?.data,
     });
   }
 );
@@ -68,8 +69,8 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     statusCode: StatusCodes.OK,
     success: true,
     message: "Doctor Schedule retrieval successfully",
-    meta: result.meta,
-    data: result.data,
+    meta: result?.meta,
+    data: result?.data,
   });
 });
 
