@@ -127,7 +127,7 @@ const getMyAppointment = async (
         : { createdAt: "desc" },
     include:
       user?.role === UserRole.PATIENT
-        ? { doctor: true, schedule: true }
+        ? { doctor: true, schedule: true, review: true, prescription: true }
         : {
             patient: {
               include: {
@@ -136,6 +136,8 @@ const getMyAppointment = async (
               },
             },
             schedule: true,
+            review: true,
+            prescription: true,
           },
   });
 
@@ -201,6 +203,9 @@ const getAllFromDB = async (filters: any, options: IPaginationOptions) => {
     include: {
       doctor: true,
       patient: true,
+      schedule: true,
+      review: true,
+      prescription: true,
     },
   });
   const total = await prisma.appointment.count({
