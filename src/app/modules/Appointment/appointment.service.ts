@@ -125,20 +125,32 @@ const getMyAppointment = async (
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
         : { createdAt: "desc" },
-    include:
-      user?.role === UserRole.PATIENT
-        ? { doctor: true, schedule: true, review: true, prescription: true }
-        : {
-            patient: {
-              include: {
-                medicalReport: true,
-                patientHealthData: true,
-              },
-            },
-            schedule: true,
-            review: true,
-            prescription: true,
-          },
+    include: {
+      patient: {
+        include: {
+          medicalReport: true,
+          patientHealthData: true,
+        },
+      },
+      schedule: true,
+      review: true,
+      prescription: true,
+      doctor: true,
+    },
+    // user?.role === UserRole.PATIENT
+    //   ? { doctor: true, schedule: true, review: true, prescription: true }
+    //   : {
+    //       patient: {
+    //         include: {
+    //           medicalReport: true,
+    //           patientHealthData: true,
+    //         },
+    //       },
+    //       schedule: true,
+    //       review: true,
+    //       prescription: true,
+    //       doctor: true,
+    //     },
   });
 
   const total = await prisma.appointment.count({
