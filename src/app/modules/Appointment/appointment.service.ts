@@ -62,11 +62,11 @@ const createAppointment = async (user: IAuthUser, payload: any) => {
       },
     });
 
-    //PH_HealthCare-datetime
     const today = new Date();
-    const transactionId = `tnx-ph_healthcare-${today.getFullYear()}${
+
+    const transactionId = `tnx_e_healthpro-${today.getFullYear()}${
       today.getMonth() + 1
-    }${today.getDate()}-${today.getSeconds()}`;
+    }${today.getDate()}-${today.getHours()}${today.getMinutes()}${today.getSeconds()}${today.getMilliseconds()}`;
 
     await tx.payment.create({
       data: {
@@ -136,6 +136,7 @@ const getMyAppointment = async (
       review: true,
       prescription: true,
       doctor: true,
+      payment: true,
     },
     // user?.role === UserRole.PATIENT
     //   ? { doctor: true, schedule: true, review: true, prescription: true }
