@@ -178,21 +178,68 @@ const getAllFromDB = async (params: any, options: IPaginationOptions) => {
   };
 };
 
-const changeProfileStatus = async (id: string, status: UserRole) => {
+const changeProfileStatus = async (
+  id: string,
+  status: { status: UserStatus }
+) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       id,
     },
   });
 
-  const updateUserStatus = await prisma.user.update({
-    where: {
-      id,
-    },
-    data: status,
-  });
+  // Start a transaction
+  try {
+    const result = await prisma.$transaction(async (transactionClient) => {
+      // Update the user status in the user table
+      const updatedUser = await transactionClient.user.update({
+        where: {
+          id,
+        },
+        data: status,
+      });
 
-  return updateUserStatus;
+      // Check if the status is DELETED
+      const isDeleted = status.status === UserStatus.DELETED;
+      if (userData.role === UserRole.DOCTOR) {
+        await transactionClient.doctor.update({
+          where: {
+            email: userData.email,
+          },
+          data: {
+            isDeleted: isDeleted,
+          },
+        });
+      } else if (userData.role === UserRole.PATIENT) {
+        await transactionClient.patient.update({
+          where: {
+            email: userData.email,
+          },
+          data: {
+            isDeleted: isDeleted,
+          },
+        });
+      } else if (userData.role === UserRole.ADMIN) {
+        await transactionClient.admin.update({
+          where: {
+            email: userData.email,
+          },
+          data: {
+            isDeleted: isDeleted,
+          },
+        });
+      } else {
+        throw new Error(`Unsupported role: ${userData.role}`);
+      }
+
+      return updatedUser;
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Transaction failed:", error);
+    throw error;
+  }
 };
 
 const getMyProfile = async (user: IAuthUser) => {
