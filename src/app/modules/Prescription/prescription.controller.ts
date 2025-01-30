@@ -53,9 +53,20 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+const getPrescriptionById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await PrescriptionService.getPrescriptionById(id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Prescription retrieval successfully",
+    data: result,
+  });
+});
 
 export const PrescriptionController = {
   insertIntoDB,
   patientPrescription,
   getAllFromDB,
+  getPrescriptionById,
 };

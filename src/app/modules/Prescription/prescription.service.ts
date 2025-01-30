@@ -146,8 +146,23 @@ const getAllFromDB = async (filters: any, options: IPaginationOptions) => {
   };
 };
 
+const getPrescriptionById = async (id: string) => {
+  const result = await prisma.prescription.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      doctor: true,
+      patient: true,
+      appointment: true,
+    },
+  });
+  return result;
+};
+
 export const PrescriptionService = {
   insertIntoDB,
   patientPrescription,
   getAllFromDB,
+  getPrescriptionById,
 };
