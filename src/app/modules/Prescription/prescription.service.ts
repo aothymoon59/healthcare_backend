@@ -3,6 +3,7 @@ import {
   PaymentStatus,
   Prescription,
   Prisma,
+  UserRole,
 } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { IAuthUser } from "../../interfaces/common";
@@ -55,12 +56,14 @@ const patientPrescription = async (
 ) => {
   const { limit, page, skip } = paginationHelper.calculatePagination(options);
 
+  // Determine the query based on the user's role
+  const whereCondition =
+    user?.role === UserRole.PATIENT
+      ? { patient: { email: user?.email } } // Patient can see their own prescriptions
+      : { doctor: { email: user?.email } }; // Doctor can see prescriptions they created
+
   const result = await prisma.prescription.findMany({
-    where: {
-      patient: {
-        email: user?.email,
-      },
-    },
+    where: whereCondition, // Apply the condition based on the user's role
     skip,
     take: limit,
     orderBy:
@@ -75,11 +78,7 @@ const patientPrescription = async (
   });
 
   const total = await prisma.prescription.count({
-    where: {
-      patient: {
-        email: user?.email,
-      },
-    },
+    where: whereCondition, // Apply the same condition for counting
   });
 
   return {
