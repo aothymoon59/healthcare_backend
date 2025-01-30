@@ -15,8 +15,13 @@ router.get(
 
 router.get(
   "/my-prescription",
-  auth(UserRole.PATIENT),
+  auth(UserRole.PATIENT, UserRole.DOCTOR),
   PrescriptionController.patientPrescription
+);
+router.get(
+  "/:id",
+  auth(UserRole.PATIENT, UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+  PrescriptionController.getPrescriptionById
 );
 
 router.post(
