@@ -160,7 +160,11 @@ const getPrescriptionById = async (id: string) => {
     },
     include: {
       doctor: true,
-      patient: true,
+      patient: {
+        include: {
+          patientHealthData: true,
+        },
+      },
       appointment: true,
     },
   });
