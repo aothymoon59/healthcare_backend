@@ -113,19 +113,41 @@ const updateIntoDB = async (
     });
 
     // create or update patient health data
+    // if (patientHealthData) {
+    //   await transactionClient.patientHealthData.upsert({
+    //     where: {
+    //       patientId: patientInfo.id,
+    //     },
+    //     update: patientHealthData,
+    //     create: { ...patientHealthData, patientId: patientInfo.id },
+    //   });
+    // }
+
     if (patientHealthData) {
       await transactionClient.patientHealthData.upsert({
         where: {
           patientId: patientInfo.id,
         },
-        update: patientHealthData,
-        create: { ...patientHealthData, patientId: patientInfo.id },
+        update: {
+          ...patientHealthData,
+          dateOfBirth: patientHealthData.dateOfBirth ?? "", // Ensuring it's always a string
+        },
+        create: {
+          ...patientHealthData,
+          dateOfBirth: patientHealthData.dateOfBirth ?? "",
+          patientId: patientInfo.id,
+        },
       });
     }
 
     if (medicalReport) {
       await transactionClient.medicalReport.create({
-        data: { ...medicalReport, patientId: patientInfo.id },
+        data: {
+          ...medicalReport,
+          patientId: patientInfo.id,
+          // reportName: medicalReport.reportName ?? "",
+          // reportLink: medicalReport.reportLink ?? "",
+        },
       });
     }
   });
