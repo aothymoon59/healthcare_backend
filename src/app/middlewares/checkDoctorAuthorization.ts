@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import { jwtHelpers } from "../../helpers/jwtHelpers";
 import config from "../../config";
 import { Secret } from "jsonwebtoken";
+import { AuthorizationStatus } from "@prisma/client";
 
 export const checkDoctorAuthorization = (...roles: string[]) => {
   return async (
@@ -38,7 +39,10 @@ export const checkDoctorAuthorization = (...roles: string[]) => {
         where: { email: req?.user?.email },
       });
 
-      if (!doctor || !doctor?.isAuthorizedDoctor) {
+      if (
+        !doctor ||
+        doctor?.authorizationStatus !== AuthorizationStatus.APPROVED
+      ) {
         return next(
           new ApiError(
             StatusCodes.FORBIDDEN,

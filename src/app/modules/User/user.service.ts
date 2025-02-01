@@ -1,5 +1,7 @@
+import { auth } from "./../../middlewares/auth";
 import {
   Admin,
+  AuthorizationStatus,
   Doctor,
   Patient,
   Prisma,
@@ -69,7 +71,10 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
     });
 
     const createdDoctorData = await transactionClient.doctor.create({
-      data: { ...req.body.doctor, isAuthorizedDoctor: false },
+      data: {
+        ...req.body.doctor,
+        authorizationStatus: AuthorizationStatus.PENDING,
+      },
     });
 
     return createdDoctorData;
@@ -78,13 +83,16 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
   return result;
 };
 
-const authorizeDoctor = async (id: string): Promise<Doctor> => {
+const authorizeDoctor = async (
+  id: string,
+  authorizationStatus: { authorizationStatus: AuthorizationStatus }
+): Promise<Doctor> => {
   const result = await prisma.doctor.update({
     where: {
       id,
     },
     data: {
-      isAuthorizedDoctor: true,
+      authorizationStatus: authorizationStatus.authorizationStatus,
     },
   });
   return result;

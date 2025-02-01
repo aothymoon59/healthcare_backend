@@ -1,4 +1,9 @@
-import { Doctor, Prisma, UserStatus } from "@prisma/client";
+import {
+  AuthorizationStatus,
+  Doctor,
+  Prisma,
+  UserStatus,
+} from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { doctorSearchableFields } from "./doctor.constants";
@@ -51,7 +56,7 @@ const getAllFromDB = async (
   }
 
   andConditions.push({
-    isAuthorizedDoctor: true,
+    authorizationStatus: AuthorizationStatus.APPROVED,
     isDeleted: false,
   });
 
@@ -135,7 +140,14 @@ const getAllUnauthorizedDoctors = async (
   }
 
   andConditions.push({
-    isAuthorizedDoctor: false,
+    OR: [
+      {
+        authorizationStatus: AuthorizationStatus.PENDING,
+      },
+      {
+        authorizationStatus: AuthorizationStatus.REJECTED,
+      },
+    ],
     isDeleted: false,
   });
 

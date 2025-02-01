@@ -27,7 +27,8 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const authorizeDoctor = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserService.authorizeDoctor(req?.params?.id);
+  const { id } = req.params;
+  const result = await UserService.authorizeDoctor(id, req.body);
 
   res.status(200).json({
     success: true,
