@@ -62,6 +62,7 @@ model Doctor {
   appointment         Appointment[]
   prescription        Prescription[]
   review              Review[]
+  isAuthorizedDoctor  Boolean             @default(false)
 
   @@map("doctors")
 }

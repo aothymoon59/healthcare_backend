@@ -31,13 +31,23 @@ router.post(
 );
 router.post(
   "/create-doctor",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   fileUploader.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = userValidation.createDoctor.parse(JSON.parse(req.body.data));
     return UserController.createDoctor(req, res, next);
   }
 );
+
+router.post(
+  "/create-doctor-by-admin",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  fileUploader.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = userValidation.createDoctor.parse(JSON.parse(req.body.data));
+    return UserController.createDoctorByAdmin(req, res, next);
+  }
+);
+
 router.post(
   "/create-patient",
   fileUploader.upload.single("file"),
