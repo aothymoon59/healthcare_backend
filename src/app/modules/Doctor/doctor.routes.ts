@@ -9,6 +9,11 @@ const router = express.Router();
 
 // task 3
 router.get("/", DoctorController.getAllFromDB);
+router.get(
+  "/pending-authorized",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  DoctorController.getAllUnauthorizedDoctors
+);
 
 //task 4
 router.get("/:id", DoctorController.getByIdFromDB);
