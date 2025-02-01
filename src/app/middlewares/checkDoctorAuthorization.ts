@@ -6,45 +6,50 @@ import { jwtHelpers } from "../../helpers/jwtHelpers";
 import config from "../../config";
 import { Secret } from "jsonwebtoken";
 
-/**
- * Middleware to check if the doctor is authorized to perform the request.
- * @param {Request & { user?: any }} req Request object
- * @param {Response} res Response object
- * @param {NextFunction} next Next function
- */
+export const checkDoctorAuthorization = (...roles: string[]) => {
+  return async (
+    req: Request & { user?: any },
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const token = req.headers.authorization;
 
-export const checkDoctorAuthorization = async (
-  req: Request & { user?: any },
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const token = req.headers.authorization;
+      if (!token) {
+        return next(
+          new ApiError(StatusCodes.UNAUTHORIZED, "You are not authorized")
+        );
+      }
 
-    if (!token) {
-      throw new ApiError(StatusCodes.UNAUTHORIZED, "You are not authorized");
-    }
+      const verifiedUser = jwtHelpers.verifyToken(
+        token,
+        config.jwt.jwt_secret as Secret
+      );
 
-    const verifiedUser = jwtHelpers.verifyToken(
-      token,
-      config.jwt.jwt_secret as Secret
-    );
+      req.user = verifiedUser;
 
-    req.user = verifiedUser;
+      // If user is not a doctor, skip this middleware
+      if (req.user?.role !== "DOCTOR") {
+        return next();
+      }
 
-    const doctor = await prisma.doctor.findUnique({
-      where: { email: req?.user?.email }, // Assuming user email is extracted from JWT
-    });
-
-    if (!doctor || !doctor?.isAuthorizedDoctor) {
-      return res.status(403).json({
-        success: false,
-        message: "Access denied. Doctor not authorized.",
+      // Proceed with doctor-specific checks
+      const doctor = await prisma.doctor.findUnique({
+        where: { email: req?.user?.email },
       });
-    }
 
-    next();
-  } catch (err) {
-    next(err);
-  }
+      if (!doctor || !doctor?.isAuthorizedDoctor) {
+        return next(
+          new ApiError(
+            StatusCodes.FORBIDDEN,
+            "Access denied. Doctor not authorized."
+          )
+        );
+      }
+
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };
 };

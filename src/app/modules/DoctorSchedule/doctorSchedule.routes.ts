@@ -4,6 +4,7 @@ import { auth } from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { DoctorScheduleValidation } from "./doctorSchedule.validation";
+import { checkDoctorAuthorization } from "../../middlewares/checkDoctorAuthorization";
 const router = express.Router();
 
 router.get(
@@ -15,17 +16,20 @@ router.get(
 router.get(
   "/my-schedule",
   auth(UserRole.DOCTOR),
+  checkDoctorAuthorization(),
   DoctorScheduleController.getMySchedule
 );
 router.post(
   "/",
   auth(UserRole.DOCTOR),
+  checkDoctorAuthorization(),
   validateRequest(DoctorScheduleValidation.create),
   DoctorScheduleController.insertIntoDB
 );
 router.delete(
   "/:id",
   auth(UserRole.DOCTOR),
+  checkDoctorAuthorization(),
   DoctorScheduleController.deleteFromDB
 );
 

@@ -4,6 +4,7 @@ import { auth } from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { AppointmentValidation } from "./appointment.validation";
+import { checkDoctorAuthorization } from "../../middlewares/checkDoctorAuthorization";
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.get(
 router.get(
   "/my-appointment",
   auth(UserRole.PATIENT, UserRole.DOCTOR),
+  checkDoctorAuthorization(),
   AppointmentController.getMyAppointment
 );
 
@@ -29,6 +31,7 @@ router.post(
 router.patch(
   "/status/:id",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+  checkDoctorAuthorization(),
   AppointmentController.changeAppointmentStatus
 );
 

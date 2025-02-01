@@ -4,6 +4,7 @@ import { UserRole } from "@prisma/client";
 import { fileUploader } from "../../../helpers/fileUploader";
 import { auth } from "../../middlewares/auth";
 import { SpecialtiesValidation } from "./specialties.validation";
+import { checkDoctorAuthorization } from "../../middlewares/checkDoctorAuthorization";
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ router.get("/", SpecialtiesController.getAllFromDB);
 router.post(
   "/",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+  checkDoctorAuthorization(),
   fileUploader.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = SpecialtiesValidation.create.parse(JSON.parse(req.body.data));
