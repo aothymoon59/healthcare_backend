@@ -4,12 +4,14 @@ import { auth } from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
 import { fileUploader } from "../../../helpers/fileUploader";
 import { MetaValidation } from "./meta.validation";
+import { checkDoctorAuthorization } from "../../middlewares/checkDoctorAuthorization";
 
 const router = express.Router();
 
 router.get(
   "/",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+  checkDoctorAuthorization(),
   MetaController.fetchDashboardMetaData
 );
 

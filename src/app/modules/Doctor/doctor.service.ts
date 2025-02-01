@@ -1,4 +1,9 @@
-import { Doctor, Prisma, UserStatus } from "@prisma/client";
+import {
+  AuthorizationStatus,
+  Doctor,
+  Prisma,
+  UserStatus,
+} from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { doctorSearchableFields } from "./doctor.constants";
@@ -51,6 +56,98 @@ const getAllFromDB = async (
   }
 
   andConditions.push({
+    authorizationStatus: AuthorizationStatus.APPROVED,
+    isDeleted: false,
+  });
+
+  const whereConditions: Prisma.DoctorWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const result = await prisma.doctor.findMany({
+    where: whereConditions,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
+    include: {
+      doctorSpecialties: {
+        include: {
+          specialties: true,
+        },
+      },
+    },
+  });
+
+  const total = await prisma.doctor.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
+const getAllUnauthorizedDoctors = async (
+  filters: IDoctorFilterRequest,
+  options: IPaginationOptions
+) => {
+  const { limit, page, skip } = paginationHelper.calculatePagination(options);
+  const { searchTerm, specialties, ...filterData } = filters;
+
+  const andConditions: Prisma.DoctorWhereInput[] = [];
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: doctorSearchableFields.map((field) => ({
+        [field]: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
+
+  if (specialties && specialties.length > 0) {
+    // Corrected specialties condition
+    andConditions.push({
+      doctorSpecialties: {
+        some: {
+          specialties: {
+            title: {
+              contains: specialties,
+              mode: "insensitive",
+            },
+          },
+        },
+      },
+    });
+  }
+
+  if (Object.keys(filterData).length > 0) {
+    const filterConditions = Object.keys(filterData).map((key) => ({
+      [key]: {
+        equals: (filterData as any)[key],
+      },
+    }));
+    andConditions.push(...filterConditions);
+  }
+
+  andConditions.push({
+    OR: [
+      {
+        authorizationStatus: AuthorizationStatus.PENDING,
+      },
+      {
+        authorizationStatus: AuthorizationStatus.REJECTED,
+      },
+    ],
     isDeleted: false,
   });
 
@@ -231,6 +328,7 @@ const softDelete = async (id: string): Promise<Doctor> => {
 export const DoctorService = {
   updateIntoDB,
   getAllFromDB,
+  getAllUnauthorizedDoctors,
   getByIdFromDB,
   deleteFromDB,
   softDelete,

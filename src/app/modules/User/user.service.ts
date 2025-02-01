@@ -1,5 +1,7 @@
+import { auth } from "./../../middlewares/auth";
 import {
   Admin,
+  AuthorizationStatus,
   Doctor,
   Patient,
   Prisma,
@@ -60,6 +62,7 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
     email: req.body.doctor.email,
     password: hashedPassword,
     role: UserRole.DOCTOR,
+    needPasswordChange: false,
   };
 
   const result = await prisma.$transaction(async (transactionClient) => {
@@ -68,7 +71,10 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
     });
 
     const createdDoctorData = await transactionClient.doctor.create({
-      data: req.body.doctor,
+      data: {
+        ...req.body.doctor,
+        authorizationStatus: AuthorizationStatus.PENDING,
+      },
     });
 
     return createdDoctorData;
@@ -76,6 +82,53 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
 
   return result;
 };
+
+const authorizeDoctor = async (
+  id: string,
+  authorizationStatus: { authorizationStatus: AuthorizationStatus }
+): Promise<Doctor> => {
+  const result = await prisma.doctor.update({
+    where: {
+      id,
+    },
+    data: {
+      authorizationStatus: authorizationStatus.authorizationStatus,
+    },
+  });
+  return result;
+};
+
+const createDoctorByAdmin = async (req: Request): Promise<Doctor> => {
+  const file = req.file as IFile;
+
+  if (file) {
+    const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
+    req.body.doctor.profilePhoto = uploadToCloudinary?.secure_url || "";
+  }
+
+  const hashedPassword: string = await bcrypt.hash(req.body.password, 12);
+
+  const userData = {
+    email: req.body.doctor.email,
+    password: hashedPassword,
+    role: UserRole.DOCTOR,
+  };
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.user.create({
+      data: userData,
+    });
+
+    const createdDoctorData = await transactionClient.doctor.create({
+      data: { ...req.body.doctor, isAuthorizedDoctor: true },
+    });
+
+    return createdDoctorData;
+  });
+
+  return result;
+};
+
 const createPatient = async (req: Request): Promise<Patient> => {
   const file = req.file as IFile;
 
@@ -333,6 +386,8 @@ const updateMyProfile = async (user: IAuthUser, req: Request) => {
 export const UserService = {
   createAdmin,
   createDoctor,
+  authorizeDoctor,
+  createDoctorByAdmin,
   createPatient,
   getAllFromDB,
   changeProfileStatus,

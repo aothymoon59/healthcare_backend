@@ -19,6 +19,23 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+const getAllUnauthorizedDoctors = catchAsync(
+  async (req: Request, res: Response) => {
+    const filters = pick(req.query, doctorFilterableFields);
+    const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+    const result = await DoctorService.getAllUnauthorizedDoctors(
+      filters,
+      options
+    );
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Pending authorized Doctors retrieval successfully",
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+);
 
 const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -68,6 +85,7 @@ const softDelete = catchAsync(async (req: Request, res: Response) => {
 export const DoctorController = {
   updateIntoDB,
   getAllFromDB,
+  getAllUnauthorizedDoctors,
   getByIdFromDB,
   deleteFromDB,
   softDelete,

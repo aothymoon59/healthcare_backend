@@ -62,6 +62,7 @@ model Doctor {
   appointment         Appointment[]
   prescription        Prescription[]
   review              Review[]
+  authorizationStatus AuthorizationStatus @default(PENDING)
 
   @@map("doctors")
 }
@@ -265,6 +266,12 @@ enum UserRole {
   ADMIN
   DOCTOR
   PATIENT
+}
+
+enum AuthorizationStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum UserStatus {
