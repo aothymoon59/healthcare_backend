@@ -78,6 +78,18 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
   return result;
 };
 
+const authorizeDoctor = async (id: string): Promise<Doctor> => {
+  const result = await prisma.doctor.update({
+    where: {
+      id,
+    },
+    data: {
+      isAuthorizedDoctor: true,
+    },
+  });
+  return result;
+};
+
 const createDoctorByAdmin = async (req: Request): Promise<Doctor> => {
   const file = req.file as IFile;
 
@@ -366,6 +378,7 @@ const updateMyProfile = async (user: IAuthUser, req: Request) => {
 export const UserService = {
   createAdmin,
   createDoctor,
+  authorizeDoctor,
   createDoctorByAdmin,
   createPatient,
   getAllFromDB,

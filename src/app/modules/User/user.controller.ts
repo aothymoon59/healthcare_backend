@@ -16,12 +16,22 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const createDoctor = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.createDoctor(req);
 
   res.status(200).json({
     success: true,
     message: "Doctor created successfully",
+    data: result,
+  });
+});
+const authorizeDoctor = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.authorizeDoctor(req?.params?.id);
+
+  res.status(200).json({
+    success: true,
+    message: "Doctor authorized successfully",
     data: result,
   });
 });
@@ -107,6 +117,7 @@ const updateMyProfile = catchAsync(
 export const UserController = {
   createAdmin,
   createDoctor,
+  authorizeDoctor,
   createDoctorByAdmin,
   createPatient,
   getAllFromDB,

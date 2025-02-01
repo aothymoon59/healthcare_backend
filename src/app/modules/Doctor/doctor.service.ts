@@ -51,6 +51,7 @@ const getAllFromDB = async (
   }
 
   andConditions.push({
+    isAuthorizedDoctor: true,
     isDeleted: false,
   });
 
@@ -93,6 +94,7 @@ const getByIdFromDB = async (id: string): Promise<Doctor | null> => {
     where: {
       id,
       isDeleted: false,
+      isAuthorizedDoctor: true,
     },
     include: {
       doctorSpecialties: {

@@ -38,6 +38,12 @@ router.post(
   }
 );
 
+router.patch(
+  "/:id/authorize-doctor",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  UserController.authorizeDoctor
+);
+
 router.post(
   "/create-doctor-by-admin",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
