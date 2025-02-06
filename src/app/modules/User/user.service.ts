@@ -120,7 +120,10 @@ const createDoctorByAdmin = async (req: Request): Promise<Doctor> => {
     });
 
     const createdDoctorData = await transactionClient.doctor.create({
-      data: { ...req.body.doctor, isAuthorizedDoctor: true },
+      data: {
+        ...req.body.doctor,
+        authorizationStatus: AuthorizationStatus.APPROVED,
+      },
     });
 
     return createdDoctorData;
