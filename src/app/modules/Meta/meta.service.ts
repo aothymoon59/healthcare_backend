@@ -1,4 +1,4 @@
-import { PaymentStatus, UserRole } from "@prisma/client";
+import { AuthorizationStatus, PaymentStatus, UserRole } from "@prisma/client";
 import { IAuthUser } from "../../interfaces/common";
 import prisma from "../../../shared/prisma";
 import { Request } from "express";
@@ -65,7 +65,11 @@ const getSuperAdminMetaData = async () => {
   const appointmentCount = await prisma.appointment.count();
   const adminCount = await prisma.admin.count();
   const patientCount = await prisma.patient.count();
-  const doctorCount = await prisma.doctor.count();
+  const doctorCount = await prisma.doctor.count({
+    where: {
+      authorizationStatus: AuthorizationStatus.APPROVED,
+    },
+  });
   const paymentCount = await prisma.payment.findMany({
     where: {
       status: PaymentStatus.PAID,
@@ -98,7 +102,11 @@ const getSuperAdminMetaData = async () => {
 const getAdminMetaData = async () => {
   const appointmentCount = await prisma.appointment.count();
   const patientCount = await prisma.patient.count();
-  const doctorCount = await prisma.doctor.count();
+  const doctorCount = await prisma.doctor.count({
+    where: {
+      authorizationStatus: AuthorizationStatus.APPROVED,
+    },
+  });
   const paymentCount = await prisma.payment.findMany({
     where: {
       status: PaymentStatus.PAID,
